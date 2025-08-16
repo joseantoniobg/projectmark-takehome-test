@@ -1,4 +1,4 @@
-export class AppError extends Error {
+export class MappedError extends Error {
   public readonly statusCode: number;
   public readonly isOperational: boolean;
 
@@ -12,31 +12,31 @@ export class AppError extends Error {
   }
 }
 
-export class NotFoundError extends AppError {
+export class NotFoundError extends MappedError {
   constructor(message = "Resource not found") {
     super(message, 404);
   }
 }
 
-export class UnauthorizedError extends AppError {
+export class UnauthorizedError extends MappedError {
   constructor(message = "Unauthorized") {
     super(message, 401);
   }
 }
 
-export class ValidationError extends AppError {
+export class ValidationError extends MappedError {
   constructor(message = "Validation failed") {
     super(message, 400);
   }
 }
 
-export class ConflictError extends AppError {
+export class ConflictError extends MappedError {
   constructor(message = "Conflict") {
     super(message, 409);
   }
 }
 
-export class InternalServerError extends AppError {
+export class InternalServerError extends MappedError {
   constructor(message = "Unexpected Error") {
     super(message, 500);
   }

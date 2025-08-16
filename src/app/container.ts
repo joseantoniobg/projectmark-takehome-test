@@ -1,5 +1,6 @@
 import { CreateTopicUseCase } from "../domain/usecases/create-topic.usecase";
 import { CreateUserUseCase } from "../domain/usecases/create-user.usecase";
+import { GetAllTopicsUseCase } from "../domain/usecases/get-all-topics.usecase";
 import { GetTopicWithChildrenUseCase } from "../domain/usecases/get-topic-with-children.usecase";
 import { GetTopicUseCase } from "../domain/usecases/get-topic.usecase";
 import { UpdateTopicUseCase } from "../domain/usecases/update-topic.usecase";
@@ -16,16 +17,22 @@ const userService = new UserService(createUserUseCase);
 const userController = new UserController(userService);
 
 const topicRepository = new TopicTypeormRepository();
+const getTopicUseCase = new GetTopicUseCase(topicRepository);
+const getAllTopicsUseCase = new GetAllTopicsUseCase(topicRepository);
+
 const createTopicUseCase = new CreateTopicUseCase(
   topicRepository,
-  userRepository
+  userRepository,
+  getTopicUseCase
 );
+
 const updateTopicUseCase = new UpdateTopicUseCase(
   userRepository,
   topicRepository,
-  createTopicUseCase
+  createTopicUseCase,
+  getTopicUseCase
 );
-const getTopicUseCase = new GetTopicUseCase(topicRepository);
+
 const getTopicWithChildrenUseCase = new GetTopicWithChildrenUseCase(
   topicRepository,
   getTopicUseCase
@@ -34,7 +41,8 @@ const topicService = new TopicService(
   createTopicUseCase,
   updateTopicUseCase,
   getTopicUseCase,
-  getTopicWithChildrenUseCase
+  getTopicWithChildrenUseCase,
+  getAllTopicsUseCase
 );
 const topicController = new TopicController(topicService);
 

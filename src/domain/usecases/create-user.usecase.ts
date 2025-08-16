@@ -1,13 +1,17 @@
 import { User } from "../entities/user";
 import { RoleEnum } from "../enums/role.enum";
-import { hasInformation, isValidEnumItem } from "../helpers/functions.helpers";
+import {
+  hasInformation,
+  isEmail,
+  isValidEnumItem,
+} from "../helpers/functions.helpers";
 import { CreateUserModel } from "../models/create-user.model";
 import { UserRepository } from "../repositories/user.repository";
 import {
   ConflictError,
   InternalServerError,
   ValidationError,
-} from "./error-handling/app-error";
+} from "./error-handling/mapped-errors";
 
 export class CreateUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
@@ -19,6 +23,10 @@ export class CreateUserUseCase {
 
     if (!hasInformation(user.email)) {
       throw new ValidationError("User email must be informed");
+    }
+
+    if (!isEmail(user.email)) {
+      throw new ValidationError("Invalid user e-mail");
     }
 
     if (!isValidEnumItem(RoleEnum, user.role)) {

@@ -6,8 +6,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryColumn,
-  TreeChildren,
-  TreeParent,
 } from "typeorm";
 import { Resource } from "./resource.entity";
 import { User } from "./user.entity";
@@ -31,24 +29,22 @@ export class Topic {
   content: string;
 
   @Column({ name: "parent_topic_id", type: "uuid", nullable: true })
-  parentTopicId?: string;
+  parentTopicId: string | null;
 
-  @TreeParent()
   @ManyToOne(() => Topic, (topic) => topic.children, {
     nullable: true,
     onDelete: "SET NULL",
   })
   @JoinColumn({ name: "parent_topic_id", referencedColumnName: "id" })
-  parentTopic: Topic | null;
+  parentTopic?: Topic;
 
   @Column({ name: "user_id", type: "uuid" })
   userId: string;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: "user_id", referencedColumnName: "id" })
-  user: User;
+  user?: User;
 
-  @TreeChildren()
   @OneToMany(() => Topic, (topic) => topic.parentTopic)
   children: Topic[];
 

@@ -27,3 +27,7 @@ export const isValidEnumItem = <T extends object>(
 
   return false;
 };
+
+export const isEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};

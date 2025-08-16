@@ -12,28 +12,26 @@ export class Topic {
   version: number;
   resources: Resource[];
   userId: string;
-  user: User;
-  parentTopicId?: string;
-  parentTopic: Topic | null;
+  parentTopicId: string | null;
   children: Topic[];
 
   constructor(
     name: string,
     content: string,
     version: number,
-    user: User,
-    parentTopic: Topic | null,
+    userId: string,
+    parentTopicId: string | null,
     resources: Resource[],
-    stack?: string
+    stack: string | null
   ) {
     this.id = generateUuid();
     this.name = name;
     this.content = content;
     this.version = version;
-    this.user = user;
+    this.userId = userId;
     this.stack = stack ?? this.id;
     this.resources = resources;
-    this.parentTopic = parentTopic;
+    this.parentTopicId = parentTopicId;
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }

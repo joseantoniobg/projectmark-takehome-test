@@ -10,21 +10,33 @@ export class TopicController {
 
   async get(req: Request, res: Response) {
     try {
-      const dto = (req as any).validatedQuery as GetTopicDto;
+      const dto: GetTopicDto = {
+        id: req.query?.id as string,
+        version: Number(req.query?.version),
+      };
       const topic = await this.topicService.getTopic(dto);
       res.status(200).json(topic);
     } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      res.status(err.statusCode).json({ error: err.message });
     }
   }
 
   async getWithChildren(req: Request, res: Response) {
     try {
-      const dto = (req as any).validatedQuery as GetTopicDto;
-      const topic = await this.topicService.getTopicWithChildren(dto);
+      const id = req.query?.id as string;
+      const topic = await this.topicService.getTopicWithChildren({ id });
       res.status(200).json(topic);
     } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      res.status(err.statusCode ?? 500).json({ error: err.message });
+    }
+  }
+
+  async getAll(req: Request, res: Response) {
+    try {
+      const topics = await this.topicService.getAll();
+      res.status(200).json(topics);
+    } catch (err: any) {
+      res.status(err.statusCode ?? 500).json({ error: err.message });
     }
   }
 
@@ -35,7 +47,7 @@ export class TopicController {
       const topic = await this.topicService.createTopic(dto);
       res.status(201).json(topic);
     } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      res.status(err.statusCode).json({ error: err.message });
     }
   }
 
@@ -46,7 +58,7 @@ export class TopicController {
       const topic = await this.topicService.updateTopic(id, dto);
       res.status(200).json(topic);
     } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      res.status(err.statusCode).json({ error: err.message });
     }
   }
 }

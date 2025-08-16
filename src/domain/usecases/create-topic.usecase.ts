@@ -1,7 +1,6 @@
 import { Topic } from "../entities/topic";
-import { RoleEnum } from "../enums/role.enum";
 import { hasInformation, isValidEnumItem } from "../helpers/functions.helpers";
-import { TopicModel } from "../models/topic.model";
+import { CreateTopicModel } from "../models/create-topic.model";
 import { TopicRepository } from "../repositories/topic.repository";
 import { UserRepository } from "../repositories/user.repository";
 import { ResourceTypeEnum } from "../enums/resource-type.enum";
@@ -12,19 +11,26 @@ import {
   NotFoundError,
   UnauthorizedError,
   ValidationError,
-} from "./error-handling/app-error";
+} from "./error-handling/mapped-errors";
+import { TopicFactory } from "../factories/topic.factory";
+import { PermissionStrategyFactory } from "../factories/permission-strategy.factory";
+import { GetTopicUseCase } from "./get-topic.usecase";
 
 export class CreateTopicUseCase {
   constructor(
     private readonly topicRepository: TopicRepository,
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private readonly getTopicUseCase: GetTopicUseCase
   ) {}
   async execute(
-    topic: TopicModel,
+    topic: CreateTopicModel,
     id?: string,
     user?: User | null,
-    version?: number
+    version?: number,
+    transactionRepostory?: TopicRepository
   ): Promise<Topic> {
+    const repository = transactionRepostory ?? this.topicRepository;
+
     if (!hasInformation(topic.name)) {
       throw new ValidationError("Topic name must be informed");
     }
@@ -41,32 +47,30 @@ export class CreateTopicUseCase {
       throw new NotFoundError("User not found");
     }
 
-    if (user.role === RoleEnum.VIEWER) {
-      throw new UnauthorizedError("Viewers can not create topics");
-    }
+    const userPermissions = PermissionStrategyFactory.create(user.role);
 
-    let parentTopic: Topic | null = null;
-
-    if (topic.parentTopicId) {
-      parentTopic = await this.topicRepository.get(topic.parentTopicId);
-
-      if (!parentTopic) {
-        throw new NotFoundError("Parent Topic not found");
-      }
+    if (!userPermissions.canCreate()) {
+      throw new UnauthorizedError("User can not create topics");
     }
 
     for (const resource of topic.resources) {
       if (!hasInformation(resource.description)) {
-        throw new ValidationError("Resource description is needed");
+        throw new ValidationError("Resource description must be informed");
       }
 
       if (!hasInformation(resource.url)) {
-        throw new ValidationError("Resource URL is needed");
+        throw new ValidationError("Resource URL must be informed");
       }
 
       if (!isValidEnumItem(ResourceTypeEnum, resource.type)) {
         throw new ValidationError("Invalid resource type");
       }
+    }
+
+    let parentTopic: Topic | null = null;
+
+    if (topic.parentTopicId) {
+      parentTopic = await this.getTopicUseCase.execute(topic.parentTopicId);
     }
 
     const resourceEntities = topic.resources.map(
@@ -79,20 +83,20 @@ export class CreateTopicUseCase {
         )
     );
 
-    const topicEntity = new Topic(
+    const topicEntity = TopicFactory.create(
+      id,
+      version,
       topic.name,
       topic.content,
-      version ?? 1,
-      user,
-      parentTopic,
-      resourceEntities,
-      id
+      user.id,
+      parentTopic?.id,
+      resourceEntities
     );
 
     try {
-      return await this.topicRepository.create(topicEntity, id);
-    } catch (e) {
-      throw new InternalServerError();
+      return await repository.create(topicEntity, id);
+    } catch (e: any) {
+      throw new InternalServerError(e.message);
     }
   }
 }

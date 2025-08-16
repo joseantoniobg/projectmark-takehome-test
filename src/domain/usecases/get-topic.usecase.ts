@@ -4,7 +4,8 @@ import {
   ConflictError,
   InternalServerError,
   NotFoundError,
-} from "./error-handling/app-error";
+  ValidationError,
+} from "./error-handling/mapped-errors";
 
 export class GetTopicUseCase {
   constructor(private readonly topicRepository: TopicRepository) {}
@@ -12,9 +13,13 @@ export class GetTopicUseCase {
   async execute(id: string, version?: number): Promise<Topic> {
     let topic: Topic | null;
 
+    if (!id) {
+      throw new ValidationError("Id must be informed");
+    }
+
     try {
       topic = await this.topicRepository.get(id);
-    } catch (e) {
+    } catch (e: any) {
       throw new InternalServerError();
     }
 
@@ -22,9 +27,15 @@ export class GetTopicUseCase {
       throw new NotFoundError("Topic not found");
     }
 
-    const currentVersion = await this.topicRepository.getLastVersionByStack(
-      topic?.stack
-    );
+    let currentVersion;
+
+    try {
+      currentVersion = await this.topicRepository.getLastVersionByStack(
+        topic.stack
+      );
+    } catch (e) {
+      throw new InternalServerError();
+    }
 
     if (currentVersion > topic.version) {
       throw new ConflictError("Outdated topic");
@@ -34,10 +45,11 @@ export class GetTopicUseCase {
       return topic;
     }
 
-    topic = await this.topicRepository.getOneByVersion(
-      topic.stack,
-      topic.version
-    );
+    try {
+      topic = await this.topicRepository.getOneByVersion(topic.stack, version);
+    } catch (e) {
+      throw new InternalServerError();
+    }
 
     if (!topic) {
       throw new NotFoundError("Topic not found");

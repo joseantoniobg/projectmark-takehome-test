@@ -1,16 +1,16 @@
 import { ResourceTypeEnum } from "../enums/resource-type.enum";
 
-type Resource = {
+export type Resource = {
   id?: string;
   url: string;
   description: string;
   type: ResourceTypeEnum;
 };
 
-export interface TopicModel {
+export interface CreateTopicModel {
   name: string;
   content: string;
   resources: Resource[];
   userId: string;
-  parentTopicId?: string;
+  parentTopicId: string | null;
 }

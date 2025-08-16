@@ -14,21 +14,26 @@ export class TopicTypeormRepository implements TopicRepository {
     return await this.ormRepo.findOne({
       where: { id },
       relations: ["resources"],
-      order: { version: "DESC" },
     });
   }
 
-  async getTopicAndChildren(topic: Topic): Promise<Topic[]> {
-    const topics = await this.ormRepo.find({
-      where: { parentTopicId: topic.id },
-      relations: ["children"],
-    });
-
-    for (const topic of topics) {
-      topic.children = await this.getTopicAndChildren(topic);
+  async updateTopicHierarchyReference(
+    newParentTopicId: string,
+    children: Topic[]
+  ): Promise<void> {
+    for (const topic of children) {
+      await this.ormRepo.update(
+        { id: topic.id },
+        { parentTopicId: newParentTopicId }
+      );
     }
+  }
 
-    return topics;
+  async getChildren(parentTopicId: string): Promise<Topic[]> {
+    return await this.ormRepo.find({
+      where: { parentTopicId },
+      relations: ["resources", "children"],
+    });
   }
 
   async getLastVersionByStack(stack: string): Promise<number> {
@@ -41,34 +46,27 @@ export class TopicTypeormRepository implements TopicRepository {
   }
 
   async getOneByVersion(stack: string, version: number): Promise<Topic | null> {
-    return await this.ormRepo.findOne({ where: { stack, version } });
+    const topic = await this.ormRepo.findOne({
+      where: { stack, version },
+      relations: ["resources"],
+    });
+    return topic;
   }
 
-  async create(topic: Topic, oldTopicId?: string): Promise<Topic> {
-    const connection = this.ormRepo.manager.connection;
-    const queryRunner = connection.createQueryRunner();
+  async create(topic: Topic): Promise<Topic> {
+    return await this.ormRepo.save(topic);
+  }
 
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+  async getAll(): Promise<Topic[]> {
+    return await this.ormRepo.find();
+  }
 
-    try {
-      const newTopic = await queryRunner.manager.save(Topic, topic);
-
-      if (oldTopicId) {
-        await queryRunner.manager.update(
-          Topic,
-          { parentTopicId: oldTopicId },
-          { parentTopicId: newTopic.id }
-        );
-      }
-
-      await queryRunner.commitTransaction();
-      return newTopic;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
+  async transaction(
+    work: (repo: TopicTypeormRepository) => Promise<Topic>
+  ): Promise<Topic> {
+    return SqliteDataSource.transaction(async () => {
+      const transactionRepo = new TopicTypeormRepository();
+      return work(transactionRepo);
+    });
   }
 }
