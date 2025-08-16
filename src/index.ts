@@ -1,11 +1,8 @@
 import "reflect-metadata";
 import express, { Express, Request, Response } from "express";
 import { container } from "tsyringe";
-import { validateDto } from "./app/middleware/body.middleware";
 import { UserTypeormRepository } from "./infra/typeorm/repositories/user-typeorm.repository";
 import { UserRepository } from "./domain/repositories/user.repository";
-import { UserController } from "./app/controllers/user.controller";
-import { CreateUserDto } from "./app/dto/create-user.dto";
 import { SqliteDataSource } from "./infra/typeorm/sqlite-data-source";
 import userRoutes from "./app/routes/user-routes";
 import topicRoutes from "./app/routes/topic-routes";
