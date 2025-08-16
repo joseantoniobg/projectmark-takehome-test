@@ -5,8 +5,8 @@ import {
   isEmail,
   isValidEnumItem,
 } from "../helpers/functions.helpers";
-import { CreateUserModel } from "../models/create-user.model";
-import { UserRepository } from "../repositories/user.repository";
+import { ICreateUserModel } from "../models/create-user.model";
+import { IUserRepository } from "../repositories/user.repository";
 import {
   ConflictError,
   InternalServerError,
@@ -14,9 +14,9 @@ import {
 } from "./error-handling/mapped-errors";
 
 export class CreateUserUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: IUserRepository) {}
 
-  async execute(user: CreateUserModel): Promise<User> {
+  async execute(user: ICreateUserModel): Promise<User> {
     if (!hasInformation(user.name)) {
       throw new ValidationError("Username must by informed");
     }

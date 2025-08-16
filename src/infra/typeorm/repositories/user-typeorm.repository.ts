@@ -1,12 +1,12 @@
 import { container, injectable } from "tsyringe";
-import { CreateUserModel } from "../../../domain/models/create-user.model";
-import { UserRepository } from "../../../domain/repositories/user.repository";
+import { ICreateUserModel } from "../../../domain/models/create-user.model";
+import { IUserRepository } from "../../../domain/repositories/user.repository";
 import { User } from "../entities/user.entity";
 import { Repository } from "typeorm";
 import { SqliteDataSource } from "../sqlite-data-source";
 
 @injectable()
-export class UserTypeormRepository implements UserRepository {
+export class UserTypeormRepository implements IUserRepository {
   private ormRepo: Repository<User>;
 
   constructor() {
@@ -21,7 +21,7 @@ export class UserTypeormRepository implements UserRepository {
     return await this.ormRepo.findOne({ where: { id } });
   }
 
-  async create(user: CreateUserModel): Promise<User> {
+  async create(user: ICreateUserModel): Promise<User> {
     return await this.ormRepo.save(user);
   }
 }

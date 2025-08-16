@@ -1,5 +1,5 @@
 import { Topic } from "../entities/topic";
-import { TopicRepository } from "../repositories/topic.repository";
+import { ITopicRepository } from "../repositories/topic.repository";
 import {
   InternalServerError,
   ValidationError,
@@ -8,7 +8,7 @@ import { GetTopicUseCase } from "./get-topic.usecase";
 
 export class GetTopicWithChildrenUseCase {
   constructor(
-    private readonly topicRepository: TopicRepository,
+    private readonly topicRepository: ITopicRepository,
     private readonly getTopicUseCase: GetTopicUseCase
   ) {}
 

@@ -2,12 +2,13 @@ import "reflect-metadata";
 import express, { Express, Request, Response } from "express";
 import { container } from "tsyringe";
 import { UserTypeormRepository } from "./infra/typeorm/repositories/user-typeorm.repository";
-import { UserRepository } from "./domain/repositories/user.repository";
+import { IUserRepository } from "./domain/repositories/user.repository";
 import { SqliteDataSource } from "./infra/typeorm/sqlite-data-source";
 import userRoutes from "./app/routes/user-routes";
 import topicRoutes from "./app/routes/topic-routes";
+import logger from "./infra/logging/logger";
 
-container.register<UserRepository>("UserRepository", {
+container.register<IUserRepository>("UserRepository", {
   useClass: UserTypeormRepository,
 });
 
@@ -21,11 +22,11 @@ app.use("/topics", topicRoutes);
 
 SqliteDataSource.initialize()
   .then(() => {
-    console.log("Database connected");
+    logger.info("Database iniciated");
     app.listen(port, () => {
-      console.log(`[server]: Server is running at http://localhost:${port}`);
+      logger.info(`[server]: Server is running at http://localhost:${port}`);
     });
   })
   .catch((err) => {
-    console.error("Error during Data Source initialization:", err);
+    logger.error("Error during Data Source initialization:", err);
   });

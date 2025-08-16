@@ -1,6 +1,6 @@
-import { PermissionStrategy } from "./permission.strategy";
+import { IPermissionStrategy } from "./permission.strategy";
 
-export class EditorPermissionStrategy implements PermissionStrategy {
+export class EditorPermissionStrategy implements IPermissionStrategy {
   canCreate(): boolean {
     return true;
   }

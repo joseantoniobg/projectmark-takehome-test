@@ -1,9 +1,9 @@
 import { Topic } from "../entities/topic";
 import { RoleEnum } from "../enums/role.enum";
 import { PermissionStrategyFactory } from "../factories/permission-strategy.factory";
-import { UpdateTopicModel } from "../models/update-topic.model";
-import { TopicRepository } from "../repositories/topic.repository";
-import { UserRepository } from "../repositories/user.repository";
+import { IUpdateTopicModel } from "../models/update-topic.model";
+import { ITopicRepository } from "../repositories/topic.repository";
+import { IUserRepository } from "../repositories/user.repository";
 import { CreateTopicUseCase } from "./create-topic.usecase";
 import {
   ConflictError,
@@ -15,13 +15,13 @@ import { GetTopicUseCase } from "./get-topic.usecase";
 
 export class UpdateTopicUseCase {
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly topicRepository: TopicRepository,
+    private readonly userRepository: IUserRepository,
+    private readonly topicRepository: ITopicRepository,
     private readonly createTopicUseCase: CreateTopicUseCase,
     private readonly getTopicUseCase: GetTopicUseCase
   ) {}
 
-  async execute(id: string, topic: UpdateTopicModel): Promise<Topic> {
+  async execute(id: string, topic: IUpdateTopicModel): Promise<Topic> {
     const user = await this.userRepository.find(topic.userId);
 
     if (!user) {

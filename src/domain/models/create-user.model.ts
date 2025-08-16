@@ -1,6 +1,6 @@
 import { RoleEnum } from "../enums/role.enum";
 
-export interface CreateUserModel {
+export interface ICreateUserModel {
   name: string;
   email: string;
   role: RoleEnum;

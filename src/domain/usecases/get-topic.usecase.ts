@@ -1,5 +1,5 @@
 import { Topic } from "../entities/topic";
-import { TopicRepository } from "../repositories/topic.repository";
+import { ITopicRepository } from "../repositories/topic.repository";
 import {
   ConflictError,
   InternalServerError,
@@ -8,7 +8,7 @@ import {
 } from "./error-handling/mapped-errors";
 
 export class GetTopicUseCase {
-  constructor(private readonly topicRepository: TopicRepository) {}
+  constructor(private readonly topicRepository: ITopicRepository) {}
 
   async execute(id: string, version?: number): Promise<Topic> {
     let topic: Topic | null;

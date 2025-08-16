@@ -1,8 +1,8 @@
 import { Topic } from "../entities/topic";
 import { hasInformation, isValidEnumItem } from "../helpers/functions.helpers";
-import { CreateTopicModel } from "../models/create-topic.model";
-import { TopicRepository } from "../repositories/topic.repository";
-import { UserRepository } from "../repositories/user.repository";
+import { ICreateTopicModel } from "../models/create-topic.model";
+import { ITopicRepository } from "../repositories/topic.repository";
+import { IUserRepository } from "../repositories/user.repository";
 import { ResourceTypeEnum } from "../enums/resource-type.enum";
 import { Resource } from "../entities/resource";
 import { User } from "../entities/user";
@@ -18,16 +18,16 @@ import { GetTopicUseCase } from "./get-topic.usecase";
 
 export class CreateTopicUseCase {
   constructor(
-    private readonly topicRepository: TopicRepository,
-    private readonly userRepository: UserRepository,
+    private readonly topicRepository: ITopicRepository,
+    private readonly userRepository: IUserRepository,
     private readonly getTopicUseCase: GetTopicUseCase
   ) {}
   async execute(
-    topic: CreateTopicModel,
+    topic: ICreateTopicModel,
     id?: string,
     user?: User | null,
     version?: number,
-    transactionRepostory?: TopicRepository
+    transactionRepostory?: ITopicRepository
   ): Promise<Topic> {
     const repository = transactionRepostory ?? this.topicRepository;
 
@@ -95,8 +95,8 @@ export class CreateTopicUseCase {
 
     try {
       return await repository.create(topicEntity, id);
-    } catch (e: any) {
-      throw new InternalServerError(e.message);
+    } catch (e) {
+      throw new InternalServerError();
     }
   }
 }

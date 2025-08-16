@@ -1,9 +1,9 @@
 import { Repository } from "typeorm";
-import { TopicRepository } from "../../../domain/repositories/topic.repository";
+import { ITopicRepository } from "../../../domain/repositories/topic.repository";
 import { Topic } from "../entities/topic.entity";
 import { SqliteDataSource } from "../sqlite-data-source";
 
-export class TopicTypeormRepository implements TopicRepository {
+export class TopicTypeormRepository implements ITopicRepository {
   private ormRepo: Repository<Topic>;
 
   constructor() {

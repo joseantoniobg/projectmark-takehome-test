@@ -7,7 +7,7 @@ export type Resource = {
   type: ResourceTypeEnum;
 };
 
-export interface CreateTopicModel {
+export interface ICreateTopicModel {
   name: string;
   content: string;
   resources: Resource[];

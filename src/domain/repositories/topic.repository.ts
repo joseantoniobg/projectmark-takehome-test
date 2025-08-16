@@ -1,6 +1,6 @@
 import { Topic } from "../entities/topic";
 
-export interface TopicRepository {
+export interface ITopicRepository {
   create(topic: Topic, oldTopicId?: string): Promise<Topic>;
   get(id: string): Promise<Topic | null>;
   getAll(): Promise<Topic[]>;
