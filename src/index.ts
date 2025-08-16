@@ -6,7 +6,7 @@ import { IUserRepository } from "./domain/repositories/user.repository";
 import { SqliteDataSource } from "./infra/typeorm/sqlite-data-source";
 import userRoutes from "./app/routes/user-routes";
 import topicRoutes from "./app/routes/topic-routes";
-import logger from "./infra/logging/logger";
+import logger from "./infra/logging/index";
 
 container.register<IUserRepository>("UserRepository", {
   useClass: UserTypeormRepository,

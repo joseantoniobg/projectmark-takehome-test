@@ -1,18 +1,16 @@
-import { createLogger, format, transports } from "winston";
+import winston from "winston";
+import { Logger } from "../../domain/logging/logger";
 
-const logger = createLogger({
-  level: process.env.LOG_LEVEL || "info",
-  format: format.combine(
-    format.timestamp(),
-    format.errors({ stack: true }),
-    format.splat(),
-    format.json()
-  ),
-  transports: [
-    new transports.Console({
-      format: format.combine(format.colorize(), format.simple()),
-    }),
-  ],
-});
+export class WinstonLogger implements Logger {
+  private logger = winston.createLogger({
+    level: "info",
+    transports: [new winston.transports.Console()],
+  });
 
-export default logger;
+  info(message: string, ...meta: any[]) {
+    this.logger.info(message, ...meta);
+  }
+  error(message: string, ...meta: any[]) {
+    this.logger.error(message, ...meta);
+  }
+}
