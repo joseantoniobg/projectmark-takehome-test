@@ -14,7 +14,7 @@ Also, it's possible to find the nearest path from one topic to another, since if
 
 All usecases have been tested. The application was modularized to keep the domain clean. Logging and exception handler were added.
 
-This system was written from scratch, adding every node dependencie as the solution was built.
+This system was written from scratch, adding every node dependency as the solution was built.
 
 ## Fold structure
 
