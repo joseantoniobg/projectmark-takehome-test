@@ -1,3 +1,5 @@
+![Projectmark logo](https://cdn.prod.website-files.com/623b8abd0d554b6266b0b6b5/63c9c7fe8cce38960cea03b1_Logo%20ProjectMark%20Main.svg)
+
 # ProjectMark Challenge
 
 ## Intro
