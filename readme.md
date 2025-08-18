@@ -72,7 +72,7 @@ Also added a user to be the author of a topic, and added permissions:
 It's not possible to delete a topic, only edit it
 creating a new version.
 
-The tree only shows current topics (topics in their last version). The path also only works with current topics ids. When a topic is updated, all childs are updated to relate to that topic, even in their older versions, I thought of the relation as a pointer, so it's updating the reference to the new version.
+The tree only shows current topics (topics in their last version). The path also only works with current topics ids. When a topic is updated, all it's children are updated to relate to that topic, even in their older versions, I thought of the relation as a pointer, so it's updating the reference to the new version.
 
 Resources are also replicated, but the edited topic must have its resources listed and updated if needed as well.
 
