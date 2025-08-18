@@ -1,0 +1,246 @@
+type: collection.insomnia.rest/5.0
+name: ProjectMark Challenge
+meta:
+  id: wrk_7b934fece9694e56a491b2aaaf6488f6
+  created: 1755289386451
+  modified: 1755289386451
+  description: ""
+collection:
+  - url: localhost:3000/users
+    name: Users
+    meta:
+      id: req_1e69fdc7d1474ab5a45e46fc40d3ebb8
+      created: 1755289391616
+      modified: 1755458357479
+      isPrivate: false
+      description: ""
+      sortKey: -1755289391616
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"name": "jose",
+        	"email": "e@e.com",
+        	"role": "Admin"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: localhost:3000/topics
+    name: Topics
+    meta:
+      id: req_64bfab554a6640a999b3dd4350790435
+      created: 1755297161143
+      modified: 1755471154500
+      isPrivate: false
+      description: ""
+      sortKey: -1754677668786
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"name": "grand child!",
+        	"content": "Wow",
+        	"userId": "a2658391-bd93-4128-8525-1737d7d35cdf",
+        	"resources": [
+        	]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: localhost:3000/topics/e44033d5-77a0-46f2-af98-393ee6491ec5
+    name: Topics
+    meta:
+      id: req_be8f1f36bfc64f1c9e5ce416b8386b13
+      created: 1755300811537
+      modified: 1755471453228
+      isPrivate: false
+      description: ""
+      sortKey: -1754601203432.25
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"name": "New Child!",
+        	"content": "I EDITED!!!!!!!",
+        	"userId": "a2658391-bd93-4128-8525-1737d7d35cdf",
+        	"resources": [
+        		{
+        			"url": "http://aaaaa.com/video.mp4",
+        			"description": "A video about it",
+        			"type": "Video"
+        		},
+        		{
+        			"url": "http://aaaaa.com/audio.mp3",
+        			"description": "A audio about it",
+        			"type": "Video"
+        		}
+        	]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: localhost:3000/topics
+    name: Topics
+    meta:
+      id: req_66b47214e57f405bbac01fb2af5eab94
+      created: 1755307347039
+      modified: 1755471718625
+      isPrivate: false
+      description: ""
+      sortKey: -1754524738078.5
+    method: GET
+    parameters:
+      - id: pair_90c4770a48724a6a8324f82c1bc5d257
+        name: id
+        value: 3abce3d4-88b9-41e2-8233-ea9d8962c59c
+        description: ""
+        disabled: false
+      - id: pair_e7997e7265214282852895cf52dbdcbf
+        name: version
+        value: "2"
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: localhost:3000/topics/children
+    name: Topics with children
+    meta:
+      id: req_180b59e4ed474fe4853bcef8dbff6cd7
+      created: 1755309847030
+      modified: 1755471259894
+      isPrivate: false
+      description: ""
+      sortKey: -1754448272724.75
+    method: GET
+    parameters:
+      - id: pair_90c4770a48724a6a8324f82c1bc5d257
+        name: id
+        value: be07040a-db0b-43bb-80a1-2713d026a86f
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: localhost:3000/topics/all
+    name: All Topics
+    meta:
+      id: req_9a6444456c0b4b93b554008f4cf229f1
+      created: 1755356829655
+      modified: 1755356844831
+      isPrivate: false
+      description: ""
+      sortKey: -1754486505401.625
+    method: GET
+    parameters:
+      - id: pair_995196f9800f44efa24f8c15f7ce19dd
+        name: ""
+        value: ""
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: localhost:3000/topics/path
+    name: Topics path
+    meta:
+      id: req_7cbb41459bb441eb86e85e27d84d1e16
+      created: 1755470243913
+      modified: 1755471267766
+      isPrivate: false
+      description: ""
+      sortKey: -1754410040047.875
+    method: GET
+    parameters:
+      - id: pair_90c4770a48724a6a8324f82c1bc5d257
+        name: startTopicId
+        value: cefa84aa-5410-41a6-b476-1682ca06babd
+        description: ""
+        disabled: false
+      - id: pair_e0ca970467554232a902ae70b465653a
+        name: endTopicId
+        value: be07040a-db0b-43bb-80a1-2713d026a86f
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e48bf3d9243352026584ef3fbcbdf1b6cc341582
+    created: 1755289386454
+    modified: 1755289386454
+environments:
+  name: Base Environment
+  meta:
+    id: env_e48bf3d9243352026584ef3fbcbdf1b6cc341582
+    created: 1755289386453
+    modified: 1755289386453
+    isPrivate: false
