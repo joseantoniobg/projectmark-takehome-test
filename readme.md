@@ -20,6 +20,7 @@ This system was written from scratch, adding every node dependencie as the solut
 
 The project follows this structure:
 
+```
 ├── src/
 │   ├── app/                     # Application layer
 │   │   ├── controllers/         # Express controllers
@@ -57,6 +58,7 @@ The project follows this structure:
 ├── jest.config.js
 ├── package.json
 └── readme.md
+```
 
 ## Topics
 
