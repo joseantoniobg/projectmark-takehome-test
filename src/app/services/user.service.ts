@@ -1,4 +1,4 @@
-import { inject, injectable } from "tsyringe";
+import { injectable } from "tsyringe";
 import { CreateUserUseCase } from "../../domain/usecases/create-user.usecase";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { User } from "../../infra/typeorm/entities/user.entity";

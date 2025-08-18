@@ -1,17 +1,10 @@
 import "reflect-metadata";
-import express, { Express, Request, Response } from "express";
-import { container } from "tsyringe";
-import { UserTypeormRepository } from "./infra/typeorm/repositories/user-typeorm.repository";
-import { IUserRepository } from "./domain/repositories/user.repository";
+import express, { Express } from "express";
 import { SqliteDataSource } from "./infra/typeorm/sqlite-data-source";
 import userRoutes from "./app/routes/user-routes";
 import topicRoutes from "./app/routes/topic-routes";
 import logger from "./infra/logging/index";
 import { requestLogger } from "./app/middleware/log.middleware";
-
-container.register<IUserRepository>("UserRepository", {
-  useClass: UserTypeormRepository,
-});
 
 const port = process.env.PORT || 3000;
 
