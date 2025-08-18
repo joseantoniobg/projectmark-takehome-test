@@ -66,7 +66,7 @@ All topics follow the entity structure provided for the test, plus the stack whi
 Also added a user to be the author of a topic, and added permissions:
 
 - Viewer users cannot create topics
-- Author users only can edit their own topics
+- Editor users only can edit their own topics
 - Admin can edit any topic
 
 It's not possible to delete a topic, only edit it
