@@ -31,6 +31,21 @@ export class TopicController {
     }
   }
 
+  async findShortestPathBetweenTwoTopics(req: Request, res: Response) {
+    try {
+      const startTopicId = req.query?.startTopicId as string;
+      const endTopicId = req.query?.endTopicId as string;
+
+      const topic = await this.topicService.findShortestPathBetweenTwoTopics({
+        startTopicId,
+        endTopicId,
+      });
+      res.status(200).json(topic);
+    } catch (err: any) {
+      res.status(err.statusCode ?? 500).json({ error: err.message });
+    }
+  }
+
   async getAll(req: Request, res: Response) {
     try {
       const topics = await this.topicService.getAll();

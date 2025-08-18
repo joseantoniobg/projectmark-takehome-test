@@ -10,11 +10,34 @@ export class TopicTypeormRepository implements ITopicRepository {
     this.ormRepo = SqliteDataSource.getRepository(Topic);
   }
 
+  private filterCurrentChildren(children: Topic[]): Topic[] {
+    const latestByStack = new Map<string, Topic>();
+
+    for (const child of children) {
+      const existing = latestByStack.get(child.stack);
+      if (!existing || child.version > existing.version) {
+        latestByStack.set(child.stack, child);
+      }
+    }
+
+    return Array.from(latestByStack.values());
+  }
+
   async get(id: string): Promise<Topic | null> {
     return await this.ormRepo.findOne({
       where: { id },
       relations: ["resources"],
     });
+  }
+
+  async getWithParentAndCurrentChildren(id: string): Promise<Topic> {
+    const topic = await this.ormRepo.findOneOrFail({
+      select: ["id", "name", "version"],
+      where: { id },
+      relations: ["parentTopic", "children"],
+    });
+    topic.children = this.filterCurrentChildren(topic.children);
+    return topic;
   }
 
   async updateTopicHierarchyReference(
@@ -29,11 +52,19 @@ export class TopicTypeormRepository implements ITopicRepository {
     }
   }
 
-  async getChildren(parentTopicId: string): Promise<Topic[]> {
+  async getAllChildren(parentTopicId: string): Promise<Topic[]> {
     return await this.ormRepo.find({
       where: { parentTopicId },
       relations: ["resources", "children"],
     });
+  }
+
+  async getCurrentChildren(parentTopicId: string): Promise<Topic[]> {
+    let children = await this.ormRepo.find({
+      where: { parentTopicId },
+      relations: ["resources", "children"],
+    });
+    return this.filterCurrentChildren(children);
   }
 
   async getLastVersionByStack(stack: string): Promise<number> {

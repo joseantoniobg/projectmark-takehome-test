@@ -1,6 +1,13 @@
 import { Topic } from "../entities/topic";
-import { hasInformation, isValidEnumItem } from "../helpers/functions.helpers";
-import { ICreateTopicModel } from "../models/create-topic.model";
+import {
+  hasInformation,
+  isValidEnumItem,
+  validateUuid,
+} from "../helpers/functions.helpers";
+import {
+  ICreateTopicInput,
+  ICreateTopicModel,
+} from "../models/create-topic.model";
 import { ITopicRepository } from "../repositories/topic.repository";
 import { IUserRepository } from "../repositories/user.repository";
 import { ResourceTypeEnum } from "../enums/resource-type.enum";
@@ -15,20 +22,22 @@ import {
 import { TopicFactory } from "../factories/topic.factory";
 import { PermissionStrategyFactory } from "../factories/permission-strategy.factory";
 import { GetTopicUseCase } from "./get-topic.usecase";
+import { ILogger } from "../logging/logger";
+import { UseCase } from "./abstract/use-case";
 
-export class CreateTopicUseCase {
+export class CreateTopicUseCase extends UseCase<ICreateTopicInput, Topic> {
   constructor(
     private readonly topicRepository: ITopicRepository,
     private readonly userRepository: IUserRepository,
-    private readonly getTopicUseCase: GetTopicUseCase
-  ) {}
-  async execute(
-    topic: ICreateTopicModel,
-    id?: string,
-    user?: User | null,
-    version?: number,
-    transactionRepostory?: ITopicRepository
-  ): Promise<Topic> {
+    private readonly getTopicUseCase: GetTopicUseCase,
+    logger: ILogger
+  ) {
+    super("CreateTopic", logger);
+  }
+  async perform(input: ICreateTopicInput): Promise<Topic> {
+    const { topic, id, transactionRepostory, version } = input;
+    let { user } = input;
+
     const repository = transactionRepostory ?? this.topicRepository;
 
     if (!hasInformation(topic.name)) {
@@ -39,7 +48,14 @@ export class CreateTopicUseCase {
       throw new ValidationError("Topic must have some content");
     }
 
+    if (id && !validateUuid(id)) {
+      throw new ValidationError("Invalid topic id");
+    }
+
     if (!user) {
+      if (!validateUuid(topic.userId)) {
+        throw new ValidationError("Invalid user id");
+      }
       user = await this.userRepository.find(topic.userId);
     }
 
@@ -70,7 +86,9 @@ export class CreateTopicUseCase {
     let parentTopic: Topic | null = null;
 
     if (topic.parentTopicId) {
-      parentTopic = await this.getTopicUseCase.execute(topic.parentTopicId);
+      parentTopic = await this.getTopicUseCase.execute({
+        id: topic.parentTopicId,
+      });
     }
 
     const resourceEntities = topic.resources.map(
@@ -93,10 +111,6 @@ export class CreateTopicUseCase {
       resourceEntities
     );
 
-    try {
-      return await repository.create(topicEntity, id);
-    } catch (e) {
-      throw new InternalServerError();
-    }
+    return await repository.create(topicEntity, id);
   }
 }

@@ -1,6 +1,5 @@
 import { generateUuid } from "../helpers/functions.helpers";
 import { Resource } from "./resource";
-import { User } from "./user";
 
 export class Topic {
   id: string;
@@ -13,6 +12,7 @@ export class Topic {
   resources: Resource[];
   userId: string;
   parentTopicId: string | null;
+  parentTopic?: Topic;
   children: Topic[];
 
   constructor(

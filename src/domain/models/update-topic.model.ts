@@ -6,3 +6,8 @@ export interface IUpdateTopicModel {
   resources: Resource[];
   userId: string;
 }
+
+export interface IUpdateTopicInput {
+  id: string;
+  topic: IUpdateTopicModel;
+}

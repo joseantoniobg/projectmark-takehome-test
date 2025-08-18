@@ -5,20 +5,27 @@ import {
   isEmail,
   isValidEnumItem,
 } from "../helpers/functions.helpers";
+import { ILogger } from "../logging/logger";
 import { ICreateUserModel } from "../models/create-user.model";
 import { IUserRepository } from "../repositories/user.repository";
+import { UseCase } from "./abstract/use-case";
 import {
   ConflictError,
   InternalServerError,
   ValidationError,
 } from "./error-handling/mapped-errors";
 
-export class CreateUserUseCase {
-  constructor(private readonly userRepository: IUserRepository) {}
+export class CreateUserUseCase extends UseCase<ICreateUserModel, User> {
+  constructor(
+    private readonly userRepository: IUserRepository,
+    logger: ILogger
+  ) {
+    super("createUser", logger);
+  }
 
-  async execute(user: ICreateUserModel): Promise<User> {
+  async perform(user: ICreateUserModel): Promise<User> {
     if (!hasInformation(user.name)) {
-      throw new ValidationError("Username must by informed");
+      throw new ValidationError("User name must by informed");
     }
 
     if (!hasInformation(user.email)) {

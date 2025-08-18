@@ -7,6 +7,7 @@ import { SqliteDataSource } from "./infra/typeorm/sqlite-data-source";
 import userRoutes from "./app/routes/user-routes";
 import topicRoutes from "./app/routes/topic-routes";
 import logger from "./infra/logging/index";
+import { requestLogger } from "./app/middleware/log.middleware";
 
 container.register<IUserRepository>("UserRepository", {
   useClass: UserTypeormRepository,
@@ -16,6 +17,8 @@ const port = process.env.PORT || 3000;
 
 const app: Express = express();
 app.use(express.json());
+
+app.use(requestLogger);
 
 app.use("/users", userRoutes);
 app.use("/topics", topicRoutes);

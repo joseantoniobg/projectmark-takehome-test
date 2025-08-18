@@ -1,5 +1,8 @@
 import { Topic } from "../entities/topic";
+import { ILogger } from "../logging/logger";
+import { IGetTopicModel } from "../models/get-topic-model";
 import { ITopicRepository } from "../repositories/topic.repository";
+import { UseCase } from "./abstract/use-case";
 import {
   ConflictError,
   InternalServerError,
@@ -7,21 +10,24 @@ import {
   ValidationError,
 } from "./error-handling/mapped-errors";
 
-export class GetTopicUseCase {
-  constructor(private readonly topicRepository: ITopicRepository) {}
+export class GetTopicUseCase extends UseCase<IGetTopicModel, Topic> {
+  constructor(
+    private readonly topicRepository: ITopicRepository,
+    logger: ILogger
+  ) {
+    super("GetTopic", logger);
+  }
 
-  async execute(id: string, version?: number): Promise<Topic> {
+  async perform(input: IGetTopicModel): Promise<Topic> {
+    const { id, version } = input;
+
     let topic: Topic | null;
 
     if (!id) {
       throw new ValidationError("Id must be informed");
     }
 
-    try {
-      topic = await this.topicRepository.get(id);
-    } catch (e: any) {
-      throw new InternalServerError();
-    }
+    topic = await this.topicRepository.get(id);
 
     if (!topic) {
       throw new NotFoundError("Topic not found");
@@ -29,13 +35,9 @@ export class GetTopicUseCase {
 
     let currentVersion;
 
-    try {
-      currentVersion = await this.topicRepository.getLastVersionByStack(
-        topic.stack
-      );
-    } catch (e) {
-      throw new InternalServerError();
-    }
+    currentVersion = await this.topicRepository.getLastVersionByStack(
+      topic.stack
+    );
 
     if (currentVersion > topic.version) {
       throw new ConflictError("Outdated topic");
