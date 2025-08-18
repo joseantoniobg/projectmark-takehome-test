@@ -16,6 +16,48 @@ All usecases have been tested. The application was modularized to keep the domai
 
 This system was written from scratch, adding every node dependencie as the solution was built.
 
+## Fold structure
+
+The project follows this structure:
+
+├── src/
+│   ├── app/                     # Application layer
+│   │   ├── controllers/         # Express controllers
+│   │   │   ├── topic.controller.ts
+│   │   │   └── user.controller.ts
+│   │   ├── services/            # Service layer - uses UseCases
+│   │   │   ├── topic.service.ts
+│   │   │   └── user.service.ts
+│   │   ├── routes/              # Express routes
+│   │   │   ├── topic-routes.ts
+│   │   │   └── user-routes.ts
+│   │   └── container.ts         # Dependency injection wiring for TDD
+│   │
+│   ├── domain/                  # Domain layer
+│   │   ├── entities/            # Domain Entities
+│   │   ├── usecases/            # Application use cases
+│   │   │   ├── tests/           # tests for all use cases
+│   │   │   ├── create-topic.usecase.ts
+│   │   │   ├── update-topic.usecase.ts
+│   │   │   ├── get-topic.usecase.ts
+│   │   │   ├── get-topic-with-children.usecase.ts
+│   │   │   ├── get-all-topics.usecase.ts
+│   │   │   ├── find-shortest-path-between-two-topics.usecase.ts
+│   │   │   └── create-user.usecase.ts
+│   │   ├── enums/               # Domain enums
+│   │   └── error-handling/      # Custom errors for error handling
+│   │
+│   ├── infra/                   # Infrastructure layer
+│   │   ├── typeorm/             # TypeORM entities and repositories
+│   │   │   ├── entities/
+│   │   │   └── repositories/
+│   │   └── logging/             # Winston / logger interface
+│   │
+│   └── index.ts
+├── jest.config.js
+├── package.json
+└── readme.md
+
 ## Topics
 
 All topics follow the entity structure provided for the test, plus the stack which is an unique for all versions of a topic so it can relate all versions. I thought about either creating a composite key with id and version, but the documentation says parentTopicId for relation, which needs to be unique. I also thought about a personalized id having some unique key and the version, but aditional logic and validation besides data would be needed and would have performance issues.
@@ -47,7 +89,7 @@ and after `npm run start`.
 
 Default port is `3000` and you can change it by adding a .env with PORT and editing Docker files.
 
-In the project root folder is an Insomnia collection where you can see all endpoints.
+In the project root folder is an Insomnia collection where you can see all endpoints (endpoints.json).
 
 When first run, the DB will be created in the root folder and it will be blank.
 
